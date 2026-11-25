@@ -6331,6 +6331,30 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		binder_inner_proc_unlock(proc);
 		break;
 	}
+	/*
+	 * HOS 4.0 ioctls used by the HarmonyOS 4.x IPC runtime (libipc_core). No access
+	 * token support here: report no features and zero tokens.
+	 */
+	case BINDER_FEATURE_SET: {
+		struct binder_feature_set __user *features = ubuf;
+
+		if (size != sizeof(struct binder_feature_set) ||
+		    put_user(0ULL, &features->feature_set)) {
+			ret = -EINVAL;
+			goto err;
+		}
+		break;
+	}
+	case BINDER_GET_ACCESS_TOKEN: {
+		struct access_token tokens = { 0 };
+
+		if (size != sizeof(tokens) ||
+		    copy_to_user(ubuf, &tokens, sizeof(tokens))) {
+			ret = -EINVAL;
+			goto err;
+		}
+		break;
+	}
 	default:
 		ret = -EINVAL;
 		goto err;
