@@ -1,0 +1,3 @@
+# Headers removed from the stock-kheaders overlay (the source tree's version is used instead).
+# Only for headers that are NOT part of any vendor-module KMI type graph, or that are just
+# macro/prototype differences. One path per line, relative to the kheaders root.
